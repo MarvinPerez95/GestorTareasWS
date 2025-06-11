@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable, JoinColumn } from "typeorm"
-import { Departamento } from "./Departamento";
-import { Tarea } from "./Tarea";
-import { HistoricoTarea } from "./HistoricoTarea";
-import { Tablero } from "./Tablero";
+const { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinColumn } = require("typeorm");
+const { Departamento } = require("./Departamento");
+const { Tarea } = require("./Tarea");
+const { HistoricoTarea } = require("./HistoricoTarea");
+const { Tablero } = require("./Tablero");
 
-@Entity()
+@Entity
 export class Usuario {
     @PrimaryGeneratedColumn()
     UsuarioID;
