@@ -31,7 +31,7 @@ const Usuario = new EntitySchema({
         Departamento: {
             type: "many-to-one",
             target: "Departamento",
-            joinColumn: true,
+            joinColumn: { name: "DepartamentoID" },
             inverseSide: "Usuarios"
         },
         Tareas: {

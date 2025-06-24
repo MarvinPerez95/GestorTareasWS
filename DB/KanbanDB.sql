@@ -1,5 +1,5 @@
-create database GestorTareas
-use GestorTareas
+create database GestorKanban
+use GestorKanban
 go
 
 create table Departamento(
@@ -143,4 +143,5 @@ INSERT INTO HistoricoTarea (TareaID, EstadoID, UsuarioID, FechaActualizacion) VA
 (3, 1, 3, GETDATE());
 
 select * from Tarea
+select * from usuario
 

@@ -1,17 +1,16 @@
-require('dotenv').config();
-require('reflect-metadata');
+require("dotenv").config();
+require("reflect-metadata");
 
-const { AppDataSource } = require('./Backend/data-source');
-const Usuario = require('./Backend/models/Usuario');
-const setupwebSocket = require('./Backend/websockets/websocket');
-const repo = AppDataSource.getRepository(Usuario);
-const express = require('express');
-const http = require('http');
-const usuarioRoutes = require('./Backend/routes/usuarioRoutes');
+const { AppDataSource } = require("./Backend/data-source");
+const { Usuario } = require("./Backend/entities/Usuario");
+const setupwebSocket = require("./Backend/websockets/websocket");
+const express = require("express");
+const http = require("http");
+const usuarioRoutes = require("./Backend/routes/usuarioRoutes");
 
 const app = express();
 app.use(express.json());
-app.use('/api/usuarios', usuarioRoutes);
+app.use("/api/usuarios", usuarioRoutes);
 
 AppDataSource.initialize()
     .then(() => {
@@ -23,8 +22,9 @@ AppDataSource.initialize()
             console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });
     })
-    .catch(err => console.error('Error al iniciar DataSource:', err));
+    .catch(err => console.error("Error al iniciar DataSource:", err));
 
+/* 
 async function crearUsuario(req, res) {
     try {
         const usuario = repo.create(req.body);
@@ -48,3 +48,4 @@ async function eliminarUsuario(req, res) {
         res.status(500).json({ error: err.message });
     }
 }
+*/

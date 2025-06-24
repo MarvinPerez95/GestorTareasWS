@@ -1,0 +1,105 @@
+const { EntitySchema } = require("typeorm");
+
+const Tarea = new EntitySchema({
+  name: "Tarea",
+  tableName: "Tarea",
+  columns: {
+    TareaID: {
+      primary: true,
+      type: "int",
+      generated: true
+    },
+    Titulo: {
+      type: "varchar",
+      length: 50
+    },
+    Descripcion: {
+      type: "varchar",
+      length: 100,
+      nullable: true
+    },
+    FechaCreacion: {
+      type: "date"
+    },
+    FechaLimite: {
+      type: "date"
+    },
+    Contenido: {
+      type: "text"
+    },
+    Activo: {
+      type: "bit"
+    }
+  },
+  relations: {
+    Categoria: {
+      type: "many-to-one",
+      target: "Categoria",
+      joinColumn: true,
+      inverseSide: "Tareas"
+    },
+    Usuario: {
+      type: "many-to-one",
+      target: "Usuario",
+      joinColumn: true,
+      inverseSide: "Tareas"
+    },
+    Estado: {
+      type: "many-to-one",
+      target: "Estado",
+      joinColumn: true,
+      inverseSide: "Tareas"
+    },
+    Prioridad: {
+      type: "many-to-one",
+      target: "Prioridad",
+      joinColumn: true,
+      inverseSide: "Tareas"
+    },
+    Archivos: {
+      type: "one-to-many",
+      target: "Archivo",
+      inverseSide: "Tarea"
+    },
+    Asignados: {
+      type: "many-to-many",
+      target: "Usuario",
+      joinTable: {
+        name: "TareaUsuario",
+        joinColumn: {
+          name: "TareaID",
+          referencedColumnName: "TareaID"
+        },
+        inverseJoinColumn: {
+          name: "UsuarioID",
+          referencedColumnName: "UsuarioID"
+        }
+      },
+      inverseSide: "TareasAsignadas"
+    },
+    Tableros: {
+      type: "many-to-many",
+      target: "Tablero",
+      joinTable: {
+        name: "TareaTablero",
+        joinColumn: {
+          name: "TareaID",
+          referencedColumnName: "TareaID"
+        },
+        inverseJoinColumn: {
+          name: "TableroID",
+          referencedColumnName: "TableroID"
+        }
+      },
+      inverseSide: "Tareas"
+    },
+    HistoricoTareas: {
+      type: "one-to-many",
+      target: "HistoricoTarea",
+      inverseSide: "Tarea"
+    }
+  }
+});
+
+module.exports = { Tarea };
+

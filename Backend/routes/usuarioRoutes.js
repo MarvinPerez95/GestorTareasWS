@@ -1,6 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const ctrl = require('../controllers/usuarioController')
+const ctrl = require('../controllers/usuarioController') //ctrl = controler
+
+const auth = require('../middleware/auth')
+
+//router.get('/', obtenerUsuarios)
+//router.post('/', auth, crearUsuario)
+//router.delete('/', auth, eliminarUsuario)
 
 router.get('/', ctrl.obtenerUsuarios)
 router.get('/:id', ctrl.obtenerUsuario)
