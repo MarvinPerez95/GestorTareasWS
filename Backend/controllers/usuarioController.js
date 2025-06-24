@@ -27,7 +27,7 @@ async function obtenerUsuarios(req, res) {
 //GetOneUser
 async function obtenerUsuario(req, res) {
     try {
-        const usuario = await repositorio.findOneBy({ UsuariID: parseInt(req.params.id) })
+        const usuario = await repositorio.findOneBy({ UsuarioID: parseInt(req.params.id) })
         if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
         res.json(usuario)
     } catch (err) {

@@ -35,25 +35,25 @@ const Tarea = new EntitySchema({
     Categoria: {
       type: "many-to-one",
       target: "Categoria",
-      joinColumn: true,
+      joinColumn: { name: "CategoriaID" },
       inverseSide: "Tareas"
     },
     Usuario: {
       type: "many-to-one",
       target: "Usuario",
-      joinColumn: true,
+      joinColumn: { name: "UsuarioID" },
       inverseSide: "Tareas"
     },
     Estado: {
       type: "many-to-one",
       target: "Estado",
-      joinColumn: true,
+      joinColumn: { name: "EstadoID" },
       inverseSide: "Tareas"
     },
     Prioridad: {
       type: "many-to-one",
       target: "Prioridad",
-      joinColumn: true,
+      joinColumn: { name: "PrioridadID" },
       inverseSide: "Tareas"
     },
     Archivos: {

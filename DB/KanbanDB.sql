@@ -1,6 +1,7 @@
 create database GestorKanban
 use GestorKanban
 go
+drop database GestorKanban
 
 create table Departamento(
 DepartamentoID int identity(1,1) primary key,
@@ -93,6 +94,8 @@ FechaActualizacion date
 )
 
 select * from sys.tables
+select * from Departamento
+select * from Usuario
 
 INSERT INTO Departamento (Nombre) VALUES
 ('Desarrollo'),
@@ -142,6 +145,7 @@ INSERT INTO HistoricoTarea (TareaID, EstadoID, UsuarioID, FechaActualizacion) VA
 (2, 1, 2, GETDATE()),
 (3, 1, 3, GETDATE());
 
+select * from Tablero
 select * from Tarea
 select * from usuario
-
+select * from sys.tables

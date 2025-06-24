@@ -32,7 +32,7 @@ const Tablero = new EntitySchema({
     Usuario: {
       type: "many-to-one",
       target: "Usuario",
-      joinColumn: true,
+      joinColumn: { name: "UsuarioID" },
       inverseSide: "Tableros"
     },
     Tareas: {
