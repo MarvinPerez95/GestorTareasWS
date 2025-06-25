@@ -66,6 +66,8 @@ Ruta nvarchar(max),
 TipoArchivo nvarchar(10),
 Tamanio int,
 Fecha date
+-- argeragr
+-- Eliminacion logica
 )
 
 create table Tablero (
@@ -88,7 +90,9 @@ HistoricoID int identity(1,1),
 TableroID int foreign key references Tablero(TableroID),
 TareaID int foreign key references Tarea(TareaID),
 EstadoID int foreign key references Estado(EstadoID),
-Usuarioid int foreign key references Usuario(UsuarioID),
+UsuarioID int foreign key references Usuario(UsuarioID), -- cambio Usuarioid a UsuarioID
+-- agregar
+-- Archivo ID int foreign key references Archivo(ArchivoID) -- control de los archivos
 Motivo nvarchar(100),
 FechaActualizacion date
 )
