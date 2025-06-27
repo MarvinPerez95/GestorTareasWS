@@ -1,19 +1,18 @@
-//import "reflect-metadata"
-require('dotenv').config();
-const { DataSource } = require('typeorm')
-const { Archivo } = require('./entities/Archivo')
-const { Categoria } = require('./entities/Categoria')
-const { Departamento } = require('./entities/Departamento')
-const { Estado } = require('./entities/Estado')
-const { HistoricoTarea } = require('./entities/HistoricoTarea')
-const { Prioridad } = require('./entities/Prioridad')
-const { Tablero } = require('./entities/Tablero')
-const { Tarea } = require('./entities/Tarea')
-const { TareaTablero } = require('./entities/TareaTablero')
-const { TareaUsuario } = require('./entities/TareaUsuario')
-const { Usuario } = require('./entities/Usuario')
+import 'dotenv/config';
+import { DataSource } from 'typeorm';
+import { Archivo } from './entities/Archivo.js';
+import { Categoria } from './entities/Categoria.js';
+import { Departamento } from './entities/Departamento.js';
+import { Estado } from './entities/Estado.js';
+import { HistoricoTarea } from './entities/HistoricoTarea.js';
+import { Prioridad } from './entities/Prioridad.js';
+import { Tablero } from './entities/Tablero.js';
+import { Tarea } from './entities/Tarea.js';
+import { TareaTablero } from './entities/TareaTablero.js';
+import { TareaUsuario } from './entities/TareaUsuario.js';
+import { Usuario } from './entities/Usuario.js';
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
     type: 'mssql',
     host: process.env.DB_SERVER,
     port: parseInt(process.env.DB_PORT),
@@ -39,8 +38,4 @@ const AppDataSource = new DataSource({
         encrypt: false,
         enableArithAbort: true
     },
-})
-
-module.exports = {
-    AppDataSource
-}
+});
