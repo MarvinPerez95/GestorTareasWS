@@ -1,10 +1,10 @@
-const { AppDataSource } = require('../data-source')
-const { Usuario } = require('../entities/Usuario')
+import { AppDataSource } from '../data-source.js'
+import { Usuario } from '../entities/Usuario.js'
 
 const repositorio = AppDataSource.getRepository(Usuario);
 
 //CreateUser
-async function crearUsuario(req, res) {
+export async function crearUsuario(req, res) {
     try {
         const usuario = repositorio.create(req.body)
         const resultado = await repositorio.save(usuario)
@@ -15,7 +15,7 @@ async function crearUsuario(req, res) {
 }
 
 //GetAllUsers
-async function obtenerUsuarios(req, res) {
+export async function obtenerUsuarios(req, res) {
     try {
         const usuarios = await repositorio.find()
         res.json(usuarios)
@@ -25,7 +25,7 @@ async function obtenerUsuarios(req, res) {
 }
 
 //GetOneUser
-async function obtenerUsuario(req, res) {
+export async function obtenerUsuario(req, res) {
     try {
         const usuario = await repositorio.findOneBy({ UsuarioID: parseInt(req.params.id) })
         if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' })
@@ -36,7 +36,7 @@ async function obtenerUsuario(req, res) {
 }
 
 //UpdateUser
-async function actualizarUsuario(req, res) {
+export async function actualizarUsuario(req, res) {
     try {
         const usuario = await repositorio.findOneBy({ UsuarioID: parseInt(req.params.id) })
         if (!usuario) return res.status(404).json({ error: 'No Encontrado' })
@@ -49,7 +49,7 @@ async function actualizarUsuario(req, res) {
 }
 
 //DeleteUser
-async function eliminarUsuario(req, res) {
+export async function eliminarUsuario(req, res) {
     try {
         const usuario = await repositorio.findOneBy({ UsuarioID: parseInt(req.params.id) })
         if (!usuario) return res.status(404).json({ error: 'No Encontrado' })
@@ -59,12 +59,4 @@ async function eliminarUsuario(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-}
-
-module.exports = {
-    crearUsuario,
-    obtenerUsuario,
-    obtenerUsuarios,
-    actualizarUsuario,
-    eliminarUsuario
 }

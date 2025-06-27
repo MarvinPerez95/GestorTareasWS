@@ -9,6 +9,8 @@ const { HistoricoTarea } = require('./entities/HistoricoTarea')
 const { Prioridad } = require('./entities/Prioridad')
 const { Tablero } = require('./entities/Tablero')
 const { Tarea } = require('./entities/Tarea')
+const { TareaTablero } = require('./entities/TareaTablero')
+const { TareaUsuario } = require('./entities/TareaUsuario')
 const { Usuario } = require('./entities/Usuario')
 
 const AppDataSource = new DataSource({
@@ -29,6 +31,8 @@ const AppDataSource = new DataSource({
         Prioridad,
         Tablero,
         Tarea,
+        TareaTablero,
+        TareaUsuario,
         Usuario
     ],
     options: {

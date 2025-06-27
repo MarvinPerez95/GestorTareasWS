@@ -1,29 +1,51 @@
-require("dotenv").config();
-require("reflect-metadata");
+/**
+ * Punto de entrada principal del servidor.
+ * - Levanta Express desde Backend/app.js
+ * - Configura Socket.IO
+ */
 
-const { AppDataSource } = require("./Backend/data-source");
-const { Usuario } = require("./Backend/entities/Usuario");
-const setupwebSocket = require("./Backend/websockets/websocket");
-const express = require("express");
-const http = require("http");
-const usuarioRoutes = require("./Backend/routes/usuarioRoutes");
-const tareaRoutes = require("./Backend/routes/tareaRoutes");
-const tableroRoutes = require("./Backend/routes/tableroRoutes");
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import { app as backendApp } from './Backend/app.js'; // Usa app del backend
+
+dotenv.config();
 
 const app = express();
-app.use(express.json());
-app.use("/api/usuarios", usuarioRoutes);
-app.use("/tareas", tareaRoutes);
-app.use("/tableros", tableroRoutes);
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: { origin: '*' }
+});
 
-AppDataSource.initialize()
-    .then(() => {
-        const server = http.createServer(app);
-        setupwebSocket(server); // habilita WebSockets
+// Compartir instancia de io con Express (para usarla en controladores)
+backendApp.set('io', io);
 
-        const PORT = process.env.PORT || 3000;
-        server.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
-        });
-    })
-    .catch(err => console.error("Error al iniciar DataSource:", err));
+// Middleware principal: API disponible en /api
+app.use('/api', backendApp);
+
+// Configurar WebSocket
+io.on('connection', socket => {
+    console.log('🟢 Cliente conectado vía WebSocket');
+
+    socket.on('join_tablero', tableroID => {
+        socket.join(`tablero_${tableroID}`);
+        console.log(`Se unió a la sala: tablero_${tableroID}`);
+    });
+
+    socket.on('join_departamento', departamentoID => {
+        socket.join(`departamento_${departamentoID}`);
+        console.log(`Se unió a la sala: departamento_${departamentoID}`);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('🔴 Cliente desconectado');
+    });
+});
+
+// Iniciar el servidor
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`🚀 Servidor iniciado en http://localhost:${PORT}`);
+});

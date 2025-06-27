@@ -1,12 +1,11 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const ctrl = require('../controllers/tareaController') //ctrl = controler
+import * as ctrl from '../controllers/tareaController.js'
+import auth from '../middleware/auth.js'
 
-const auth = require('../middleware/auth')
-
-//router.get('/', obtenerTareas)
-//router.post('/', auth, crearTarea)
-//router.delete('/', auth, eliminarTarea)
+//router.get('/', ctrl.obtenerTareas)
+//router.post('/', auth, ctrl.crearTarea)
+//router.delete('/', auth, ctrl.eliminarTarea)
 
 router.get('/', ctrl.obtenerTareas)
 router.get('/:id', ctrl.obtenerTarea)
@@ -14,4 +13,4 @@ router.post('/', ctrl.crearTarea)
 router.put('/:id', ctrl.actualizarTarea)
 router.delete('/:id', ctrl.eliminarTarea)
 
-module.exports = router
+export default router

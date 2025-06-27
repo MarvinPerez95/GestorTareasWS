@@ -1,10 +1,10 @@
-const { AppDataSource } = require('../data-source')
-const { Archivo } = require('../entities/Archivo')
+import { AppDataSource } from '../data-source.js'
+import { Archivo } from '../entities/Archivo.js'
 
 const repositorio = AppDataSource.getRepository(Archivo);
 
 //CreateArchivo
-async function agregarArchivo(req, res) {
+export async function agregarArchivo(req, res) {
     try {
         const archivo = repositorio.create(req.body)
         const resultado = await repositorio.save(archivo)
@@ -15,7 +15,7 @@ async function agregarArchivo(req, res) {
 }
 
 //GetAllArchivos
-async function obtenerArchivos(req, res) {
+export async function obtenerArchivos(req, res) {
     try {
         const archivos = await repositorio.find()
         res.json(archivos)
@@ -25,7 +25,7 @@ async function obtenerArchivos(req, res) {
 }
 
 //GetOneArchivo
-async function obtenerArchivo(req, res) {
+export async function obtenerArchivo(req, res) {
     try {
         const archivo = await repositorio.findOneBy({ ArchivoID: parseInt(req.params.id) })
         if (!archivo) return res.status(404).json({ error: 'archivo no encontrado' })
@@ -35,23 +35,8 @@ async function obtenerArchivo(req, res) {
     }
 }
 
-/*
-//UpdateArchivo
-async function actualizArarchivo(req, res) {
-    try {
-        const archivo = await repositorio.findOneBy({ ArchivoID: parseInt(req.params.id) })
-        if (!archivo) return res.status(404).json({ error: 'No Encontrado' })
-        repositorio.merge(archivo, req.body)
-        const resultado = await repositorio.save(archivo)
-        res.json(resultado)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-}
-*/
-
 //DeleteArchivo
-async function eliminarArchivo(req, res) {
+export async function eliminarArchivo(req, res) {
     try {
         const archivo = await repositorio.findOneBy({ ArchivoID: parseInt(req.params.id) })
         if (!archivo) return res.status(404).json({ error: 'No Encontrado' })
@@ -61,12 +46,4 @@ async function eliminarArchivo(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-}
-
-module.exports = {
-    agregarArchivo,
-    obtenerArchivo,
-    obtenerArchivos,
-    //actualizArarchivo,
-    eliminarArchivo
 }

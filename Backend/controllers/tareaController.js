@@ -1,21 +1,70 @@
-const { AppDataSource } = require('../data-source')
-const { Tarea } = require('../entities/Tarea')
+import { AppDataSource } from '../data-source.js';
+import { Tarea } from '../entities/Tarea.js';
+import { TareaTablero } from '../entities/TareaTablero.js';
+import { Categoria } from '../entities/Categoria.js';
+import { Estado } from '../entities/Estado.js';
+import { Prioridad } from '../entities/Prioridad.js';
+import { Usuario } from '../entities/Usuario.js';
+import { Tablero } from '../entities/Tablero.js';
 
+const tareaRepository = AppDataSource.getRepository(Tarea);
+const tareaTableroRepository = AppDataSource.getRepository(TareaTablero);
+const categoriaRepo = AppDataSource.getRepository(Categoria);
+const estadoRepo = AppDataSource.getRepository(Estado);
+const prioridadRepo = AppDataSource.getRepository(Prioridad);
+const usuarioRepo = AppDataSource.getRepository(Usuario);
+const tableroRepo = AppDataSource.getRepository(Tablero);
 const repositorio = AppDataSource.getRepository(Tarea);
 
 //CreateTarea
-async function crearTarea(req, res) {
+export async function crearTarea(req, res) {
     try {
-        const tarea = repositorio.create(req.body)
-        const resultado = await repositorio.save(tarea)
-        res.status(201).json(resultado)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
+        const {
+            titulo, descripcion, fechaLimite, contenido, activo,
+            categoriaID, estadoID, prioridadID, usuarioID, tableroID
+        } = req.body;
+
+        const [categoria, estado, prioridad, usuario, tablero] = await Promise.all([
+            categoriaRepo.findOneBy({ categoriaID }),
+            estadoRepo.findOneBy({ estadoID }),
+            prioridadRepo.findOneBy({ prioridadID }),
+            usuarioRepo.findOneBy({ usuarioID }),
+            tableroRepo.findOneBy({ tableroID })
+        ]);
+
+        if (!categoria || !estado || !prioridad || !usuario || !tablero)
+            return res.status(400).json({ mensaje: 'Datos inválidos' });
+
+        const nuevaTarea = tareaRepository.create({
+            titulo,
+            descripcion,
+            fechaCreacion: new Date(),
+            fechaLimite: new Date(fechaLimite),
+            contenido,
+            activo,
+            categoria,
+            estado,
+            prioridad,
+            usuario
+        });
+
+        const tareaGuardada = await tareaRepository.save(nuevaTarea);
+
+        const relacion = tareaTableroRepository.create({ tarea: tareaGuardada, tablero });
+        await tareaTableroRepository.save(relacion);
+
+        const io = req.app.get('io');
+        io.to(`tablero_${tableroID}`).emit('nueva_tarea', tareaGuardada);
+
+        res.status(201).json(tareaGuardada);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al crear la tarea' });
     }
 }
 
 //GetAllTareas
-async function obtenerTareas(req, res) {
+export async function obtenerTareas(req, res) {
     try {
         const tareas = await repositorio.find()
         res.json(tareas)
@@ -25,7 +74,7 @@ async function obtenerTareas(req, res) {
 }
 
 //GetOneTarea
-async function obtenerTarea(req, res) {
+export async function obtenerTarea(req, res) {
     try {
         const tarea = await repositorio.findOneBy({ TareaID: parseInt(req.params.id) })
         if (!tarea) return res.status(404).json({ error: 'tarea no encontrado' })
@@ -36,7 +85,7 @@ async function obtenerTarea(req, res) {
 }
 
 //UpdateTarea
-async function actualizarTarea(req, res) {
+export async function actualizarTarea(req, res) {
     try {
         const tarea = await repositorio.findOneBy({ TareaID: parseInt(req.params.id) })
         if (!tarea) return res.status(404).json({ error: 'No encontrado' })
@@ -48,8 +97,8 @@ async function actualizarTarea(req, res) {
     }
 }
 
-//DeleteUser
-async function eliminarTarea(req, res) {
+//DeleteTarea
+export async function eliminarTarea(req, res) {
     try {
         const tarea = await repositorio.findOneBy({ TareaID: parseInt(req.params.id) })
         if (!tarea) return res.status(404).json({ error: 'No Encontrado' })
@@ -59,12 +108,4 @@ async function eliminarTarea(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-}
-
-module.exports = {
-    crearTarea,
-    obtenerTarea,
-    obtenerTareas,
-    actualizarTarea,
-    eliminarTarea
 }

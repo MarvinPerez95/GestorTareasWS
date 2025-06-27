@@ -1,10 +1,10 @@
-const { AppDataSource } = require('../data-source')
-const { Departamento } = require('../entities/Departamento')
+import { AppDataSource } from '../data-source.js'
+import { Departamento } from '../entities/Departamento.js'
 
 const repositorio = AppDataSource.getRepository(Departamento);
 
 //CreateDepartamento
-async function crearDepartamento(req, res) {
+export async function crearDepartamento(req, res) {
     try {
         const departamento = repositorio.create(req.body)
         const resultado = await repositorio.save(departamento)
@@ -15,7 +15,7 @@ async function crearDepartamento(req, res) {
 }
 
 //GetAllDepartamentos
-async function obtenerDepartamentos(req, res) {
+export async function obtenerDepartamentos(req, res) {
     try {
         const departamentos = await repositorio.find()
         res.json(departamentos)
@@ -25,7 +25,7 @@ async function obtenerDepartamentos(req, res) {
 }
 
 //GetOneDepartamento
-async function obtenerDepartamento(req, res) {
+export async function obtenerDepartamento(req, res) {
     try {
         const departamento = await repositorio.findOneBy({ DepartamentoID: parseInt(req.params.id) })
         if (!departamento) return res.status(404).json({ error: 'departamento no encontrado' })
@@ -36,7 +36,7 @@ async function obtenerDepartamento(req, res) {
 }
 
 //UpdateDepartamento
-async function actualizarDepartamento(req, res) {
+export async function actualizarDepartamento(req, res) {
     try {
         const departamento = await repositorio.findOneBy({ DepartamentoID: parseInt(req.params.id) })
         if (!departamento) return res.status(404).json({ error: 'No Encontrado' })
@@ -49,7 +49,7 @@ async function actualizarDepartamento(req, res) {
 }
 
 //DeleteDepartamento
-async function eliminarDepartamento(req, res) {
+export async function eliminarDepartamento(req, res) {
     try {
         const departamento = await repositorio.findOneBy({ DepartamentoID: parseInt(req.params.id) })
         if (!departamento) return res.status(404).json({ error: 'No Encontrado' })
@@ -59,12 +59,4 @@ async function eliminarDepartamento(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-}
-
-module.exports = {
-    crearDepartamento,
-    obtenerDepartamento,
-    obtenerDepartamentos,
-    actualizarDepartamento,
-    eliminarDepartamento
 }

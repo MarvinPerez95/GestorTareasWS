@@ -1,8 +1,6 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const ctrl = require('../controllers/tableroController') //ctrl = controler
-
-const auth = require('../middleware/auth')
+import * as ctrl from '../controllers/tableroController.js'
 
 //router.get('/', obtenerTareas)
 //router.post('/', auth, crearTarea)
@@ -14,4 +12,4 @@ router.post('/', ctrl.crearTablero)
 router.put('/:id', ctrl.actualizarTablero)
 router.delete('/:id', ctrl.eliminarTablero)
 
-module.exports = router
+export default router

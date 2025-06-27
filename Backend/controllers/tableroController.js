@@ -1,21 +1,43 @@
-const { AppDataSource } = require('../data-source')
-const { Tablero } = require('../entities/Tablero')
+import { AppDataSource } from '../data-source.js'
+import { Tablero } from '../entities/Tablero.js'
+import { Departamento } from '../entities/Departamento.js'
+import { Usuario } from '../entities/Usuario.js'
 
+const tableroRepository = AppDataSource.getRepository(Tablero);
+const departamentoRepository = AppDataSource.getRepository(Departamento);
+const usuarioRepository = AppDataSource.getRepository(Usuario);
 const repositorio = AppDataSource.getRepository(Tablero);
 
 //CreateTablero
-async function crearTablero(req, res) {
+export async function crearTablero(req, res) {
     try {
-        const tablero = repositorio.create(req.body)
-        const resultado = await repositorio.save(tablero)
-        res.status(201).json(resultado)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
+        const { nombre, descripcion, usuarioID } = req.body;
+
+        const usuario = await usuarioRepository.findOne({ where: { usuarioID }, relations: ['departamento'] });
+        if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+        const nuevoTablero = tableroRepository.create({
+            nombre,
+            descripcion,
+            fechaCreacion: new Date(),
+            usuario,
+            departamento: usuario.departamento
+        });
+
+        const resultado = await tableroRepository.save(nuevoTablero);
+
+        const io = req.app.get('io');
+        io.to(`departamento_${usuario.departamento.departamentoID}`).emit('nuevo_tablero', resultado);
+
+        res.status(201).json(resultado);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al crear el tablero' });
     }
-}
+};
 
 //GetAllTableros
-async function obtenerTableros(req, res) {
+export async function obtenerTableros(req, res) {
     try {
         const tableros = await repositorio.find()
         res.json(tableros)
@@ -25,7 +47,7 @@ async function obtenerTableros(req, res) {
 }
 
 //GetOneTablero
-async function obtenerTablero(req, res) {
+export async function obtenerTablero(req, res) {
     try {
         const tablero = await repositorio.findOneBy({ TableroID: parseInt(req.params.id) })
         if (!tablero) return res.status(404).json({ error: 'tablero no encontrado' })
@@ -36,7 +58,7 @@ async function obtenerTablero(req, res) {
 }
 
 //UpdateTablero
-async function actualizarTablero(req, res) {
+export async function actualizarTablero(req, res) {
     try {
         const tablero = await repositorio.findOneBy({ TableroID: parseInt(req.params.id) })
         if (!tablero) return res.status(404).json({ error: 'No encontrado' })
@@ -49,7 +71,7 @@ async function actualizarTablero(req, res) {
 }
 
 //DeleteUser
-async function eliminarTablero(req, res) {
+export async function eliminarTablero(req, res) {
     try {
         const tablero = await repositorio.findOneBy({ TableroID: parseInt(req.params.id) })
         if (!tablero) return res.status(404).json({ error: 'No Encontrado' })
@@ -59,12 +81,4 @@ async function eliminarTablero(req, res) {
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
-}
-
-module.exports = {
-    crearTablero,
-    obtenerTablero,
-    obtenerTableros,
-    actualizarTablero,
-    eliminarTablero
 }

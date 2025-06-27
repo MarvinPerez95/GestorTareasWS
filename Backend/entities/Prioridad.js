@@ -1,6 +1,6 @@
-const { EntitySchema } = require("typeorm");
+import { EntitySchema } from "typeorm";
 
-const Prioridad = new EntitySchema({
+export const Prioridad = new EntitySchema({
   name: "Prioridad",
   tableName: "Prioridad",
   columns: {
@@ -35,4 +35,3 @@ const Prioridad = new EntitySchema({
   }
 });
 
-module.exports = { Prioridad };

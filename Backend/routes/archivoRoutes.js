@@ -1,12 +1,11 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const ctrl = require('../controllers/archivoController') //ctrl = controler
+import * as ctrl from '../controllers/archivoController.js'
+import auth from '../middleware/auth.js'
 
-const auth = require('../middleware/auth')
-
-//router.get('/', obtenerArchivos)
-//router.post('/', auth, crearArchivo)
-//router.delete('/', auth, eliminarArchivo)
+//router.get('/', ctrl.obtenerArchivos)
+//router.post('/', auth, ctrl.crearArchivo)
+//router.delete('/', auth, ctrl.eliminarArchivo)
 
 router.get('/', ctrl.obtenerArchivos)
 router.get('/:id', ctrl.obtenerArchivo)
@@ -14,4 +13,4 @@ router.post('/', ctrl.agregarArchivo)
 //router.put('/:id', ctrl.actualizarArchivo)
 router.delete('/:id', ctrl.eliminarArchivo)
 
-module.exports = router
+export default router
