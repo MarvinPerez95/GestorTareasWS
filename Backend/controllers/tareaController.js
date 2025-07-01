@@ -21,15 +21,15 @@ export async function crearTarea(req, res) {
     try {
         const {
             titulo, descripcion, fechaLimite, contenido, activo,
-            categoriaID, estadoID, prioridadID, usuarioID, tableroID
+            CategoriaID, EstadoID, PrioridadID, UsuarioID, TableroID
         } = req.body;
 
         const [categoria, estado, prioridad, usuario, tablero] = await Promise.all([
-            categoriaRepo.findOneBy({ categoriaID }),
-            estadoRepo.findOneBy({ estadoID }),
-            prioridadRepo.findOneBy({ prioridadID }),
-            usuarioRepo.findOneBy({ usuarioID }),
-            tableroRepo.findOneBy({ tableroID })
+            categoriaRepo.findOneBy({ CategoriaID }),
+            estadoRepo.findOneBy({ EstadoID }),
+            prioridadRepo.findOneBy({ PrioridadID }),
+            usuarioRepo.findOneBy({ UsuarioID }),
+            tableroRepo.findOneBy({ TableroID })
         ]);
 
         if (!categoria || !estado || !prioridad || !usuario || !tablero)

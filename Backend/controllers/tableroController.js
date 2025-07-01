@@ -11,9 +11,9 @@ const repositorio = AppDataSource.getRepository(Tablero);
 //CreateTablero
 export async function crearTablero(req, res) {
     try {
-        const { nombre, descripcion, usuarioID } = req.body;
+        const { nombre, descripcion, UsuarioID } = req.body;
 
-        const usuario = await usuarioRepository.findOne({ where: { usuarioID }, relations: ['departamento'] });
+        const usuario = await usuarioRepository.findOne({ where: { UsuarioID }, relations: ['Departamento'] });
         if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
 
         const nuevoTablero = tableroRepository.create({
@@ -27,7 +27,7 @@ export async function crearTablero(req, res) {
         const resultado = await tableroRepository.save(nuevoTablero);
 
         const io = req.app.get('io');
-        io.to(`departamento_${usuario.departamento.departamentoID}`).emit('nuevo_tablero', resultado);
+        io.to(`departamento_${usuario.departamento.DepartamentoID}`).emit('nuevo_tablero', resultado);
 
         res.status(201).json(resultado);
     } catch (error) {

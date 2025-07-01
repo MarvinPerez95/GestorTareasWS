@@ -22,8 +22,8 @@ const io = new Server(server, {
 // Compartir instancia de io con Express (para usarla en controladores)
 backendApp.set('io', io);
 
-// Middleware principal: API disponible en /api
-app.use('/api', backendApp);
+// Middleware principal
+app.use('/', backendApp);
 
 // Configurar WebSocket
 io.on('connection', socket => {

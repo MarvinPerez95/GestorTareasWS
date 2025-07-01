@@ -11,7 +11,8 @@ export const Tablero = new EntitySchema({
     },
     Nombre: {
       type: "varchar",
-      length: 100
+      length: 100,
+      nullable: true
     },
     Descripcion: {
       type: "varchar",

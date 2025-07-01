@@ -1,0 +1,53 @@
+<!-- Archivo: Frontend/test-kanban.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban WS Test</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body>
+    <h1>Prueba WebSocket Kanban</h1>
+
+    <div>
+        <label>Unirse a departamento:</label>
+        <input id="depID" placeholder="ID departamento" />
+        <button onclick="joinDepartamento()">Unirse</button>
+    </div>
+
+    <div>
+        <label>Unirse a tablero:</label>
+        <input id="tabID" placeholder="ID tablero" />
+        <button onclick="joinTablero()">Unirse</button>
+    </div>
+
+    <hr />
+    <div id="mensajes"></div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+
+        function joinDepartamento() {
+            const id = document.getElementById('depID').value;
+            socket.emit('join_departamento', id);
+        }
+
+        function joinTablero() {
+            const id = document.getElementById('tabID').value;
+            socket.emit('join_tablero', id);
+        }
+
+        socket.on('nuevo_tablero', data => {
+            document.getElementById('mensajes').innerHTML += `<p>🧩 Tablero nuevo: ${data.nombre}</p>`;
+        });
+
+        socket.on('nueva_tarea', data => {
+            document.getElementById('mensajes').innerHTML += `<p>📝 Tarea nueva: ${data.titulo}</p>`;
+        });
+    </script>
+</body>
+
+</html>

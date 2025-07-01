@@ -5,6 +5,12 @@ import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import dotenv from 'dotenv';
 
+import { AppDataSource } from './data-source.js';
+
+AppDataSource.initialize()
+    .then(() => console.log('📦 Base de datos conectada'))
+    .catch(error => console.error('❌ Error al conectar TypeORM:', error));
+
 // Importar rutas
 // import usuarioRoutes from './routes/usuario.routes.js';
 import tableroRoutes from './routes/tableroRoutes.js';

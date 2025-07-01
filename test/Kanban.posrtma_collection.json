@@ -1,0 +1,48 @@
+{
+  "info": {
+    "name": "Kanban API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Crear Tablero",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Tablero de QA\",\n  \"descripcion\": \"Pruebas automáticas y manuales\",\n  \"usuarioID\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/tablero",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["tablero"]
+        }
+      }
+    },
+    {
+      "name": "Crear Tarea",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"titulo\": \"Escribir pruebas unitarias\",\n  \"descripcion\": \"Cobertura mínima del 80%\",\n  \"fechaLimite\": \"2025-07-01\",\n  \"contenido\": \"Usar Jest\",\n  \"activo\": true,\n  \"categoriaID\": 1,\n  \"estadoID\": 1,\n  \"prioridadID\": 1,\n  \"usuarioID\": 1,\n  \"tableroID\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/tarea",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["tarea"]
+        }
+      }
+    }
+  ]
+}
