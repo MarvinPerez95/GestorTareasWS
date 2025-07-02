@@ -20,7 +20,8 @@ export const Tablero = new EntitySchema({
       nullable: true
     },
     FechaCreacion: {
-      type: "date"
+      type: "date",
+      default: () => "GETDATE()"
     }
   },
   relations: {

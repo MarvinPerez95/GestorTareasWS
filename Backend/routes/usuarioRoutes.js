@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import * as ctrl from '../controllers/usuarioController.js'
-import auth from '../middleware/auth.js'
+//import auth from '../middleware/auth.js'
 
 //router.get('/', ctrl.obtenerUsuarios)
 //router.post('/', auth, ctrl.crearUsuario)

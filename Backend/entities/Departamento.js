@@ -17,6 +17,10 @@ export const Departamento = new EntitySchema({
             type: "varchar",
             length: 100,
             nullable: true
+        },
+        Activo: {
+            type: "bit",
+            default: true
         }
     },
     relations: {

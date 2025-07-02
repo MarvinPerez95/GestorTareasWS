@@ -14,4 +14,8 @@ router.post('/', ctrl.crearTarea)
 router.put('/:id', ctrl.actualizarTarea)
 router.delete('/:id', ctrl.eliminarTarea)
 
+
+// Ruta de prueba para inserción en Tablero, Tarea y TareaTablero
+router.post('/test', ctrl.pruebaInsercion)
+
 export default router

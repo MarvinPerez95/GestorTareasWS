@@ -14,13 +14,13 @@ export const TareaUsuario = new EntitySchema({
         }
     },
     relations: {
-        tarea: {
+        Tarea: {
             type: "many-to-one",
             target: "Tarea",
             joinColumn: { name: "TareaID" },
             onDelete: "CASCADE"
         },
-        usuario: {
+        Usuario: {
             type: "many-to-one",
             target: "Usuario",
             joinColumn: { name: "UsuarioID" },

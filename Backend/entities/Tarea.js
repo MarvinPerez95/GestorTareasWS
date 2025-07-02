@@ -19,7 +19,8 @@ export const Tarea = new EntitySchema({
       nullable: true
     },
     FechaCreacion: {
-      type: "date"
+      type: "date",
+      default: () => "GETDATE()"
     },
     FechaLimite: {
       type: "date"

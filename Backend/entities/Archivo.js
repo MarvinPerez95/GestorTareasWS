@@ -30,6 +30,10 @@ export const Archivo = new EntitySchema({
     Fecha: {
       type: "date",
       nullable: true
+    },
+    Activo: {
+      type: "bit",
+      default: true
     }
   },
   relations: {

@@ -25,6 +25,10 @@ export const Usuario = new EntitySchema({
         Rol: {
             type: "varchar",
             length: 25
+        },
+        Activo: {
+            type: "bit",
+            default: true,
         }
     },
     relations: {

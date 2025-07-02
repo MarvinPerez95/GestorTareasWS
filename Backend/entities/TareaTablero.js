@@ -5,27 +5,26 @@ export const TareaTablero = new EntitySchema({
     tableName: "TareaTablero",
     columns: {
         TareaID: {
-            primary: true,
-            type: "int"
+            type: "int",
+            primary: true
         },
         TableroID: {
-            primary: true,
-            type: "int"
+            type: "int",
+            primary: true
         }
     },
     relations: {
-        tarea: {
-            type: "many-to-one",
+        Tarea: {
             target: "Tarea",
+            type: "many-to-one",
             joinColumn: { name: "TareaID" },
             onDelete: "CASCADE"
         },
-        tablero: {
-            type: "many-to-one",
+        Tablero: {
             target: "Tablero",
+            type: "many-to-one",
             joinColumn: { name: "TableroID" },
             onDelete: "CASCADE"
         }
     }
 });
-
