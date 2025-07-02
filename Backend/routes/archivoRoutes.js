@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import * as ctrl from '../controllers/archivoController.js'
-import auth from '../middleware/auth.js'
+//import auth from '../middleware/auth.js'
 
 //router.get('/', ctrl.obtenerArchivos)
 //router.post('/', auth, ctrl.crearArchivo)

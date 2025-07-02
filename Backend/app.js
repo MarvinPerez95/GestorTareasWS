@@ -15,7 +15,8 @@ AppDataSource.initialize()
 // import usuarioRoutes from './routes/usuario.routes.js';
 import tableroRoutes from './routes/tableroRoutes.js';
 import tareaRoutes from './routes/tareaRoutes.js';
-import usuarioRoutes from './routes/usuarioRoutes.js'
+import usuarioRoutes from './routes/usuarioRoutes.js';
+import consultaRoutes from './routes/consultaRoutes.js';
 
 dotenv.config();
 
@@ -40,4 +41,5 @@ app.get('/', (req, res) => {
 app.use('/tablero', tableroRoutes);
 app.use('/tarea', tareaRoutes);
 app.use('/usuario', usuarioRoutes)
+app.use('/api', consultaRoutes)
 export { app };
