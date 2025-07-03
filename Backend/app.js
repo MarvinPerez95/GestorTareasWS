@@ -4,8 +4,13 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 import { AppDataSource } from './data-source.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 AppDataSource.initialize()
     .then(() => console.log('📦 Base de datos conectada'))
@@ -17,6 +22,7 @@ import tableroRoutes from './routes/tableroRoutes.js';
 import tareaRoutes from './routes/tareaRoutes.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import consultaRoutes from './routes/consultaRoutes.js';
+import catalogoRouter from './routes/catalogoRoutes.js'
 
 dotenv.config();
 
@@ -32,6 +38,9 @@ app.use(fileUpload());
 // Servir archivos estáticos si se requieren (por ejemplo, archivos subidos)
 app.use('/uploads', express.static('Backend/uploads'));
 
+// Import Rutas FrondEnd
+app.use(express.static(path.join(__dirname, '../Frontend')))
+
 // Ruta raíz
 app.get('/', (req, res) => {
     res.send('API de Kanban en funcionamiento');
@@ -41,5 +50,12 @@ app.get('/', (req, res) => {
 app.use('/tablero', tableroRoutes);
 app.use('/tarea', tareaRoutes);
 app.use('/usuario', usuarioRoutes)
-app.use('/api', consultaRoutes)
+app.use('/consulta', consultaRoutes)
+app.use('/catalogo', catalogoRouter)
+
+// Ruestas HTML
+// app.get('/crear', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../frontend/crearTarea.html'))
+// })
+
 export { app };

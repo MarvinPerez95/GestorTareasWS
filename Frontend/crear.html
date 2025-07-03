@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Tablero y Tarea</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+    <h2>🧩 Crear Tablero</h2>
+    <form id="formTablero">
+        <input type="text" id="nombreTablero" placeholder="Nombre del tablero" required />
+        <input type="text" id="descripcionTablero" placeholder="Descripción" />
+        <select id="departamentoSelect"></select>
+        <select id="usuarioSelect"></select>
+        <button type="submit">Crear Tablero</button>
+    </form>
+
+    <h2>📝 Crear Tarea</h2>
+    <form id="formTarea">
+        <input type="text" id="titulo" placeholder="Título" required />
+        <input type="text" id="descripcion" placeholder="Descripción" />
+        <textarea id="contenido" placeholder="Contenido"></textarea>
+        <input type="date" id="fechaLimite" required />
+        <select id="categoriaSelect"></select>
+        <select id="estadoSelect"></select>
+        <select id="prioridadSelect"></select>
+        <select id="usuarioTareaSelect"></select>
+        <select id="tableroTareaSelect"></select>
+        <button type="submit">Crear Tarea</button>
+    </form>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/crear.js"></script>
+</body>
+
+</html>
