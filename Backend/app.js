@@ -68,6 +68,10 @@ app.get('/crear', (req, res) => {
 app.get("/panel", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/panelPrincipal.html"));
 });
+app.get("/multitablero", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/panelMultitablero.html"));
+});
+
 
 
 //Registro de Logs

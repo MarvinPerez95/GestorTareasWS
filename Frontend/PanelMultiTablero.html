@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Multitableros</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .tablero-section {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .titulo-tablero {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #aaa;
+            padding: 0.4rem;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📈 Panel Multitableros</h1>
+    <div id="contenedor-tableros"></div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        const socket = io("http://localhost:3000");
+        const tableroMap = {}; // Mapa de tableroID -> tareas
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const tableros = await fetch("/tablero").then(r => r.json());
+
+            for (const tablero of tableros) {
+                socket.emit("join_tablero", tablero.TableroID);
+                tableroMap[tablero.TableroID] = [];
+                crearSeccionTablero(tablero);
+                const tareas = await fetch(`/tarea/tablero/${tablero.TableroID}`).then(r => r.json());
+                tableroMap[tablero.TableroID] = tareas;
+                renderizarTareas(tablero.TableroID);
+            }
+        });
+
+        socket.on("nueva_tarea", (tarea) => {
+            const tableroId = tarea.TableroID || tarea?.Tableros?.[0]?.TableroID;
+            if (!tableroMap[tableroId]) return;
+            tableroMap[tableroId].push(tarea);
+            renderizarTareas(tableroId);
+        });
+
+        function crearSeccionTablero(tablero) {
+            const contenedor = document.getElementById("contenedor-tableros");
+            const div = document.createElement("div");
+            div.classList.add("tablero-section");
+            div.id = `tablero_${tablero.TableroID}`;
+            div.innerHTML = `
+        <div class="titulo-tablero">${tablero.Nombre} (${tablero.Departamento?.Nombre || ""})</div>
+        <table>
+          <thead>
+            <tr><th>Título</th><th>Descripción</th><th>Prioridad</th><th>Estado</th><th>Responsable</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      `;
+            contenedor.appendChild(div);
+        }
+
+        function renderizarTareas(tableroId) {
+            const seccion = document.querySelector(`#tablero_${tableroId} tbody`);
+            seccion.innerHTML = "";
+            for (const tarea of tableroMap[tableroId]) {
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+          <td>${tarea.Titulo}</td>
+          <td>${tarea.Descripcion}</td>
+          <td>${tarea.Prioridad?.Nombre || "-"}</td>
+          <td>${tarea.Estado?.Nombre || "-"}</td>
+          <td>${tarea.Usuario?.Nombre || "-"}</td>
+        `;
+                seccion.appendChild(fila);
+            }
+        }
+    </script>
+</body>
+
+</html>

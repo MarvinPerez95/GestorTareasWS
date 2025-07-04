@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         socket.emit("join_tablero", nuevoId);
         tableroActual = nuevoId;
         await cargarTareasDelTablero(tableroActual);
+        await mostrarDetallesTablero(tableroActual);
+        renderizarTareas(); // Forzar renderizado tras cambio de tablero
     });
 
     document.getElementById("filtroPrioridad").addEventListener("change", renderizarTareas);
@@ -42,6 +44,7 @@ async function cargarTableros() {
         socket.emit("join_tablero", data[0].TableroID);
         tableroActual = data[0].TableroID;
         await cargarTareasDelTablero(tableroActual);
+        await mostrarDetallesTablero(tableroActual); // Mostrar detalles del primer tablero
     }
 }
 
@@ -81,12 +84,22 @@ function renderizarTareas() {
     const tbody = document.getElementById("tareasBody");
     tbody.innerHTML = "";
 
-    tareasActuales
+    const tareasFiltradas = tareasActuales
         .filter(t =>
             (!filtroPrioridad || t.Prioridad?.Nombre === filtroPrioridad) &&
             (!filtroEstado || t.Estado?.Nombre === filtroEstado)
-        )
-        .forEach(tarea => agregarFilaTarea(tarea));
+        );
+
+    if (tareasFiltradas.length === 0) {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `<td colspan="5" style="text-align:center;color:#888;">No hay tareas para este tablero o filtro.</td>`;
+        tbody.appendChild(fila);
+        // Depuración: mostrar en consola la respuesta de la API
+        console.log("[API] Tareas recibidas:", tareasActuales);
+        return;
+    }
+
+    tareasFiltradas.forEach(tarea => agregarFilaTarea(tarea));
 }
 
 function agregarFilaTarea(tarea) {
@@ -100,3 +113,18 @@ function agregarFilaTarea(tarea) {
   `;
     document.getElementById("tareasBody").appendChild(fila);
 }
+
+async function mostrarDetallesTablero(tableroId) {
+    const res = await fetch(`/tablero/${tableroId}`);
+    const tablero = await res.json();
+    document.getElementById("nombreTableroDetalle").textContent = tablero.Nombre || "";
+    document.getElementById("descripcionTableroDetalle").textContent = tablero.Descripcion || "";
+    // Agrega aquí más campos si lo necesitas
+}
+
+// Al crear una nueva tarea por WebSocket, recarga todas las tareas del tablero actual para mantener consistencia
+socket.on("nueva_tarea", async (tarea) => {
+    if (parseInt(tableroActual) === tarea?.Tableros?.[0]?.TableroID) {
+        await cargarTareasDelTablero(tableroActual);
+    }
+});

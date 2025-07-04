@@ -94,6 +94,11 @@ export const Tarea = new EntitySchema({
       },
       inverseSide: "Tareas"
     },
+    TareaTableros: {
+      target: "TareaTablero",
+      type: "one-to-many",
+      inverseSide: "tarea"
+    },
     HistoricoTareas: {
       type: "one-to-many",
       target: "HistoricoTarea",

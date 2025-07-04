@@ -8,6 +8,7 @@ import { Estado } from '../entities/Estado.js';
 import { Prioridad } from '../entities/Prioridad.js';
 import { Usuario } from '../entities/Usuario.js';
 import { Tablero } from '../entities/Tablero.js';
+import { In } from "typeorm";
 
 const tareaRepo = AppDataSource.getRepository(Tarea);
 const tareaTableroRepo = AppDataSource.getRepository(TareaTablero);
@@ -94,19 +95,21 @@ export const crearTarea = async (req, res) => {
 export async function listarTareasPorTablero(req, res) {
     try {
         const { tableroId } = req.params;
-
+        const idNum = parseInt(tableroId);
+        if (isNaN(idNum)) {
+            return res.status(400).json({ mensaje: "ID de tablero inválido" });
+        }
         // Obtener IDs de tareas relacionadas al tablero
         const relaciones = await tareaTableroRepo.find({
-            where: { TableroID: parseInt(tableroId) }
+            where: { TableroID: idNum }
         });
-
         const tareaIDs = relaciones.map(r => r.TareaID);
-
-        // Buscar tareas y cargar relaciones
-        const tareas = await tareaRepo.findByIds(tareaIDs, {
+        if (tareaIDs.length === 0) return res.json([]);
+        // Buscar tareas y cargar relaciones (TypeORM >=0.3)
+        const tareas = await tareaRepo.find({
+            where: { TareaID: In(tareaIDs) },
             relations: ["Categoria", "Estado", "Prioridad", "Usuario"]
         });
-
         res.json(tareas);
     } catch (err) {
         console.error("❌ Error al cargar tareas del tablero:", err);
@@ -161,11 +164,6 @@ export async function eliminarTarea(req, res) {
     }
 }
 
-
-
-
-
-
 // Prueba de inserción
 export async function pruebaInsercion(req, res) {
     try {
@@ -190,7 +188,8 @@ export async function pruebaInsercion(req, res) {
         const tareaGuardada = await tareaRepo.save(nuevaTarea);
 
         // Crear la relación en TareaTablero
-        const tareaTableroRepo = AppDataSource.getRepository("TareaTablero");
+        // CORREGIDO: Usar referencia al objeto, no string
+        const tareaTableroRepo = AppDataSource.getRepository(TareaTablero);
         const relacion = tareaTableroRepo.create({
             TareaID: tareaGuardada.TareaID,
             TableroID: tableroGuardado.TableroID
