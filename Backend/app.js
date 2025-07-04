@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 
 import { AppDataSource } from './data-source.js';
+//import { logMiddleware, logError } from './middleware/log.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,7 +23,10 @@ import tableroRoutes from './routes/tableroRoutes.js';
 import tareaRoutes from './routes/tareaRoutes.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import consultaRoutes from './routes/consultaRoutes.js';
-import catalogoRouter from './routes/catalogoRoutes.js'
+import departamentoRouter from './routes/departamentosRoutes.js'
+import categoriaRoutes from './routes/categoriaRoutes.js';
+import estadoRoutes from './routes/estadoRoutes.js';
+import prioridadRoutes from './routes/prioridadRoutes.js';
 
 dotenv.config();
 
@@ -34,6 +38,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(fileUpload());
+//app.use(logMiddleware());
 
 // Servir archivos estáticos si se requieren (por ejemplo, archivos subidos)
 app.use('/uploads', express.static('Backend/uploads'));
@@ -51,11 +56,21 @@ app.use('/tablero', tableroRoutes);
 app.use('/tarea', tareaRoutes);
 app.use('/usuario', usuarioRoutes)
 app.use('/consulta', consultaRoutes)
-app.use('/catalogo', catalogoRouter)
+app.use('/departamento', departamentoRouter)
+app.use('/categoria', categoriaRoutes);
+app.use('/estado', estadoRoutes);
+app.use('/prioridad', prioridadRoutes);
 
 // Ruestas HTML
-// app.get('/crear', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../frontend/crearTarea.html'))
-// })
+app.get('/crear', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/crear.html'))
+})
+app.get("/panel", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/panelPrincipal.html"));
+});
+
+
+//Registro de Logs
+//app.use(logError());
 
 export { app };

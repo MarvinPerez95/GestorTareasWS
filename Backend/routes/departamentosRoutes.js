@@ -1,7 +1,7 @@
 import express from 'express'
 const router = express.Router()
 import * as ctrl from '../controllers/departamentoController.js'
-import auth from '../middleware/auth.js'
+//import auth from '../middleware/auth.js'
 
 //router.get('/', ctrl.obtenerDepartamentos)
 //router.post('/', auth, ctrl.crearDepartamento)

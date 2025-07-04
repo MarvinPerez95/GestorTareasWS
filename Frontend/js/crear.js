@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             FechaCreacion: new Date()
         };
 
-        const res = await fetch("/tableros", {
+        const res = await fetch("/tablero", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Activo: true
         };
 
-        const res = await fetch("/tareas", {
+        const res = await fetch("/tarea", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
@@ -56,13 +56,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function cargarOpciones() {
-    await cargarSelect("/tableros", "tableroTareaSelect", "TableroID", "Nombre");
-    await cargarSelect("/usuarios", "usuarioSelect", "UsuarioID", "Nombre");
-    await cargarSelect("/usuarios", "usuarioTareaSelect", "UsuarioID", "Nombre");
-    await cargarSelect("/departamentos", "departamentoSelect", "DepartamentoID", "Nombre");
-    await cargarSelect("/categorias", "categoriaSelect", "CategoriaID", "Nombre");
-    await cargarSelect("/estados", "estadoSelect", "EstadoID", "Nombre");
-    await cargarSelect("/prioridades", "prioridadSelect", "PrioridadID", "Nombre");
+    await cargarSelect("/tablero", "tableroTareaSelect", "TableroID", "Nombre");
+    await cargarSelect("/usuario", "usuarioSelect", "UsuarioID", "Nombre");
+    await cargarSelect("/usuario", "usuarioTareaSelect", "UsuarioID", "Nombre");
+    await cargarSelect("/departamento", "departamentoSelect", "DepartamentoID", "Nombre");
+    await cargarSelect("/categoria", "categoriaSelect", "CategoriaID", "Nombre");
+    await cargarSelect("/estado", "estadoSelect", "EstadoID", "Nombre");
+    await cargarSelect("/prioridad", "prioridadSelect", "PrioridadID", "Nombre");
 }
 
 async function cargarSelect(url, elementId, valueField, textField) {

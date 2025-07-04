@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel en Tiempo Real</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <h2>📌 Panel en Tiempo Real (Tablero)</h2>
+    <label for="tableroId">Seleccionar Tablero:</label>
+    <select id="tableroId"></select>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Responsable</th>
+            </tr>
+        </thead>
+        <tbody id="tareasBody"></tbody>
+    </table>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="js/panelPrincipal.js"></script>
+</body>
+
+</html>
