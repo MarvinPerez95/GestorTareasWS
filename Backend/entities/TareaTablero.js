@@ -18,13 +18,13 @@ export const TareaTablero = new EntitySchema({
             target: "Tarea",
             type: "many-to-one",
             joinColumn: { name: "TareaID" },
-            onDelete: "CASCADE"
+            onDelete: "CASCADE",
         },
         Tablero: {
             target: "Tablero",
             type: "many-to-one",
             joinColumn: { name: "TableroID" },
-            onDelete: "CASCADE"
+            onDelete: "CASCADE",
         }
     }
 });

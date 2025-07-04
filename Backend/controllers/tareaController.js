@@ -1,6 +1,8 @@
+// Archivo: Backend/controllers/tarea.controller.js
 import { AppDataSource } from '../data-source.js';
 import { Tarea } from '../entities/Tarea.js';
 import { TareaTablero } from '../entities/TareaTablero.js';
+import { TareaUsuario } from '../entities/TareaUsuario.js';
 import { Categoria } from '../entities/Categoria.js';
 import { Estado } from '../entities/Estado.js';
 import { Prioridad } from '../entities/Prioridad.js';
@@ -9,15 +11,14 @@ import { Tablero } from '../entities/Tablero.js';
 
 const tareaRepo = AppDataSource.getRepository(Tarea);
 const tareaTableroRepo = AppDataSource.getRepository(TareaTablero);
+const tareaUsuarioRepository = AppDataSource.getRepository(TareaUsuario);
 const categoriaRepo = AppDataSource.getRepository(Categoria);
 const estadoRepo = AppDataSource.getRepository(Estado);
 const prioridadRepo = AppDataSource.getRepository(Prioridad);
 const usuarioRepo = AppDataSource.getRepository(Usuario);
 const tableroRepo = AppDataSource.getRepository(Tablero);
-const repositorio = AppDataSource.getRepository(Tarea);
 
-//CreateTarea
-export async function crearTarea(req, res) {
+export const crearTarea = async (req, res) => {
     try {
         const {
             Titulo,
@@ -29,7 +30,8 @@ export async function crearTarea(req, res) {
             EstadoID,
             PrioridadID,
             UsuarioID,
-            TableroID
+            TableroID,
+            colaboradores = [] // array opcional
         } = req.body;
 
         // Repositorios
@@ -39,13 +41,9 @@ export async function crearTarea(req, res) {
         const usuario = await usuarioRepo.findOneBy({ UsuarioID });
         const tablero = await tableroRepo.findOneBy({ TableroID });
 
-        // Validación de existencia de claves foráneas
-        if (!categoria || !estado || !prioridad || !usuario || !tablero) {
-            console.log(categoria, estado, prioridad, usuario, tablero)
-            return res.status(400).json({ mensaje: 'Datos inválidos: categoría, estado, prioridad, usuario o tablero no existen.' });
-        }
+        if (!categoria || !estado || !prioridad || !usuario || !tablero)
+            return res.status(400).json({ mensaje: 'Datos inválidos' });
 
-        // Crear la tarea
         const nuevaTarea = tareaRepo.create({
             Titulo,
             Descripcion,
@@ -61,24 +59,36 @@ export async function crearTarea(req, res) {
 
         const tareaGuardada = await tareaRepo.save(nuevaTarea);
 
-        // Crear la relación en la tabla intermedia TareaTablero (usando solo IDs)
-        const relacion = tareaTableroRepo.create({
+        //Relación con Tablero
+        //const relacionTablero = tareaTableroRepo.create({
+        //    TareaID: tareaGuardada.TareaID, //TareaID: { TareaID: tareaGuardada.TareaID }, //tarea: tareaGuardada,
+        //    TableroID: tablero.TableroID // TableroID: { tableroID } //tablero
+        //});
+        await tareaTableroRepo.insert({
             TareaID: tareaGuardada.TareaID,
             TableroID: tablero.TableroID
         });
-        await tareaTableroRepo.save(relacion);
+        //await tareaTableroRepo.save(relacionTablero);
 
-        // Emitir evento por WebSocket a los usuarios del tablero
+        // Relación con Usuarios colaboradores
+        if (Array.isArray(colaboradores)) {
+            for (const colaboradorID of colaboradores) {
+                await tareaUsuarioRepository.save({
+                    tarea: { TareaID: tareaGuardada.tareaID },
+                    usuario: { UsuarioID: colaboradorID }
+                });
+            }
+        }
+
         const io = req.app.get('io');
         io.to(`tablero_${TableroID}`).emit('nueva_tarea', tareaGuardada);
 
-        return res.status(201).json(tareaGuardada);
-
+        res.status(201).json(tareaGuardada);
     } catch (error) {
-        console.error("❌ Error al crear la tarea:", error);
-        return res.status(500).json({ mensaje: 'Error interno al crear la tarea' });
+        console.error(error);
+        res.status(500).json({ mensaje: 'Error al crear la tarea' });
     }
-}
+};
 
 
 export async function listarTareasPorTablero(req, res) {
