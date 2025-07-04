@@ -7,8 +7,8 @@ import { Prioridad } from '../entities/Prioridad.js';
 import { Usuario } from '../entities/Usuario.js';
 import { Tablero } from '../entities/Tablero.js';
 
-const tareaRepository = AppDataSource.getRepository(Tarea);
-const tareaTableroRepository = AppDataSource.getRepository(TareaTablero);
+const tareaRepo = AppDataSource.getRepository(Tarea);
+const tareaTableroRepo = AppDataSource.getRepository(TareaTablero);
 const categoriaRepo = AppDataSource.getRepository(Categoria);
 const estadoRepo = AppDataSource.getRepository(Estado);
 const prioridadRepo = AppDataSource.getRepository(Prioridad);
@@ -46,7 +46,7 @@ export async function crearTarea(req, res) {
         }
 
         // Crear la tarea
-        const nuevaTarea = tareaRepository.create({
+        const nuevaTarea = tareaRepo.create({
             Titulo,
             Descripcion,
             FechaCreacion: new Date(),
@@ -59,15 +59,14 @@ export async function crearTarea(req, res) {
             Usuario: usuario
         });
 
-        const tareaGuardada = await tareaRepository.save(nuevaTarea);
+        const tareaGuardada = await tareaRepo.save(nuevaTarea);
 
         // Crear la relación en la tabla intermedia TareaTablero (usando solo IDs)
-        // const relacion = tareaTableroRepository.create({
-        //     TareaID: tareaGuardada.TareaID, // Usar el ID ya asignado por la base de datos
-        //     TableroID: tablero.TableroID,
-        // });
-
-        // await tareaTableroRepository.save(relacion);
+        const relacion = tareaTableroRepo.create({
+            TareaID: tareaGuardada.TareaID,
+            TableroID: tablero.TableroID
+        });
+        await tareaTableroRepo.save(relacion);
 
         // Emitir evento por WebSocket a los usuarios del tablero
         const io = req.app.get('io');
@@ -81,6 +80,29 @@ export async function crearTarea(req, res) {
     }
 }
 
+
+export async function listarTareasPorTablero(req, res) {
+    try {
+        const { tableroId } = req.params;
+
+        // Obtener IDs de tareas relacionadas al tablero
+        const relaciones = await tareaTableroRepo.find({
+            where: { TableroID: parseInt(tableroId) }
+        });
+
+        const tareaIDs = relaciones.map(r => r.TareaID);
+
+        // Buscar tareas y cargar relaciones
+        const tareas = await tareaRepo.findByIds(tareaIDs, {
+            relations: ["Categoria", "Estado", "Prioridad", "Usuario"]
+        });
+
+        res.json(tareas);
+    } catch (err) {
+        console.error("❌ Error al cargar tareas del tablero:", err);
+        res.status(500).json({ mensaje: "Error al obtener tareas del tablero" });
+    }
+}
 
 //GetAllTareas
 export async function obtenerTareas(req, res) {
@@ -128,6 +150,11 @@ export async function eliminarTarea(req, res) {
         res.status(500).json({ error: err.message })
     }
 }
+
+
+
+
+
 
 // Prueba de inserción
 export async function pruebaInsercion(req, res) {

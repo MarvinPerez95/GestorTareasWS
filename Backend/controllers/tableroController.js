@@ -75,7 +75,7 @@ export async function actualizarTablero(req, res) {
     }
 }
 
-//DeleteUser
+//DeleteTablero
 export async function eliminarTablero(req, res) {
     try {
         const tablero = await tableroRepository.findOneBy({ TableroID: parseInt(req.params.id) })

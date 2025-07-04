@@ -11,6 +11,8 @@ import * as ctrl from '../controllers/tareaController.js'
 router.get('/', ctrl.obtenerTareas)
 router.get('/:id', ctrl.obtenerTarea)
 router.post('/', ctrl.crearTarea)
+router.get('/tablero/:tableroId', ctrl.listarTareasPorTablero);
+
 router.put('/:id', ctrl.actualizarTarea)
 router.delete('/:id', ctrl.eliminarTarea)
 
